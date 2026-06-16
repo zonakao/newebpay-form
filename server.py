@@ -30,8 +30,8 @@ for _p in ['/System/Library/Fonts/PingFang.ttc',
             pass
 if not _font_loaded:
     _font_path = os.path.join(os.path.dirname(__file__), 'NotoSansCJK.otf')
-    pdfmetrics.registerFont(TTFont('CJK',  _font_path))
-    pdfmetrics.registerFont(TTFont('CJKb', _font_path))
+    pdfmetrics.registerFont(TTFont('CJK',  _font_path, subfontIndex=0))
+    pdfmetrics.registerFont(TTFont('CJKb', _font_path, subfontIndex=0))
 
 F, FB = 'CJK', 'CJKb'
 
