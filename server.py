@@ -87,7 +87,7 @@ def section_hdr(c, x, y, w2, h2, txt, fill=(.93,.93,.93)):
 
 # Load static company stamp
 _STATIC_STAMP = None
-_stamp_path = os.path.join(os.path.dirname(__file__), '發票章.png')
+_stamp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '發票章.png')
 if os.path.exists(_stamp_path):
     with open(_stamp_path, 'rb') as _f:
         _STATIC_STAMP = _f.read()
