@@ -270,20 +270,17 @@ body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:
   <div class="card">
     <div class="card-header">
       <h2>簽章</h2>
-      <span class="badge badge-blue">申請人親簽 + 公司發票章</span>
+      <span class="badge badge-blue">申請人親簽</span>
     </div>
     <div class="card-body">
-      <div class="grid-2">
-        <!-- 申請人簽章 -->
-        <div>
-          <div class="upload-label">申請人簽章圖（上傳圖片）</div>
-          <div class="upload-zone" id="sigZone">
-            <input type="file" id="sigFile" accept="image/*" onchange="handleUpload(event,'sig')">
-            <div class="icon">✍️</div>
-            <p><strong>點擊或拖曳上傳簽章圖</strong></p>
-            <p>PNG / JPG，建議白底或透明背景</p>
-            <img id="sigPreview" class="upload-preview" style="display:none;">
-          </div>
+      <div style="max-width:320px; margin:0 auto;">
+        <div class="upload-label" style="text-align:center;">申請人簽章圖（上傳圖片）</div>
+        <div class="upload-zone" id="sigZone">
+          <input type="file" id="sigFile" accept="image/*" onchange="handleUpload(event,'sig')">
+          <div class="icon">✍️</div>
+          <p><strong>點擊或拖曳上傳簽章圖</strong></p>
+          <p>PNG / JPG，建議白底或透明背景</p>
+          <img id="sigPreview" class="upload-preview" style="display:none;">
         </div>
       </div>
     </div>
