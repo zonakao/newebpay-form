@@ -285,17 +285,6 @@ body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:
             <img id="sigPreview" class="upload-preview" style="display:none;">
           </div>
         </div>
-        <!-- 公司發票章 -->
-        <div>
-          <div class="upload-label">公司發票章（上傳印章圖片）</div>
-          <div class="upload-zone" id="stampZone">
-            <input type="file" id="stampFile" accept="image/*" onchange="handleUpload(event,'stamp')">
-            <div class="icon">🔴</div>
-            <p><strong>點擊或拖曳上傳公司章圖片</strong></p>
-            <p>請上傳完整印章照片</p>
-            <img id="stampPreview" class="upload-preview" style="display:none;">
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -531,7 +520,6 @@ body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:
 document.getElementById('fillDate').value = new Date().toISOString().split('T')[0];
 
 let sigDataUrl   = null;
-let stampDataUrl = null;
 let slackEnabled = false;
 
 // ── 圖片上傳
@@ -540,15 +528,9 @@ function handleUpload(e, type) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    if (type === 'sig') {
-      sigDataUrl = ev.target.result;
-      const img = document.getElementById('sigPreview');
-      img.src = sigDataUrl; img.style.display = 'block';
-    } else {
-      stampDataUrl = ev.target.result;
-      const img = document.getElementById('stampPreview');
-      img.src = stampDataUrl; img.style.display = 'block';
-    }
+    sigDataUrl = ev.target.result;
+    const img = document.getElementById('sigPreview');
+    img.src = sigDataUrl; img.style.display = 'block';
   };
   reader.readAsDataURL(file);
 }
@@ -578,9 +560,8 @@ function resetForm() {
   document.getElementById('payoutDays').value = '10';
   document.getElementById('memberType').value = '企業';
   document.getElementById('applyType').value = '新會員新增商店';
-  sigDataUrl = stampDataUrl = null;
+  sigDataUrl = null;
   document.getElementById('sigPreview').style.display = 'none';
-  document.getElementById('stampPreview').style.display = 'none';
   showToast('表單已清除');
 }
 
@@ -618,7 +599,7 @@ async function generatePDF() {
     const resp = await fetch('http://localhost:8899/generate-pdf', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data, sigImage: sigDataUrl, stampImage: stampDataUrl }),
+      body: JSON.stringify({ data, sigImage: sigDataUrl }),
     });
 
     if (!resp.ok) {
