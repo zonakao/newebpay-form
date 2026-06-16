@@ -13,16 +13,25 @@ import PIL.Image, urllib.request, json
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 
-# ── 中文字體
+# ── 中文字體（macOS 優先，Linux 用 Noto Sans CJK）
+_font_loaded = False
 for _p in ['/System/Library/Fonts/PingFang.ttc',
-           '/System/Library/Fonts/STHeiti Medium.ttc']:
+           '/System/Library/Fonts/STHeiti Medium.ttc',
+           '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
+           '/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc',
+           os.path.join(os.path.dirname(__file__), 'NotoSansCJK-Regular.ttc')]:
     if os.path.exists(_p):
         try:
             pdfmetrics.registerFont(TTFont('CJK',  _p, subfontIndex=0))
             pdfmetrics.registerFont(TTFont('CJKb', _p, subfontIndex=0))
+            _font_loaded = True
             break
         except Exception:
             pass
+if not _font_loaded:
+    _font_path = os.path.join(os.path.dirname(__file__), 'NotoSansCJK.otf')
+    pdfmetrics.registerFont(TTFont('CJK',  _font_path))
+    pdfmetrics.registerFont(TTFont('CJKb', _font_path))
 
 F, FB = 'CJK', 'CJKb'
 
