@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>藍新金流合作推廣商申請表</title>
+<title>金流轉介申請平台</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:#f5f4f0; color:#333; font-size:14px; }
@@ -141,15 +141,30 @@ body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:
 .toast.error { background:#c92a2a; }
 
 @media (max-width:640px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
+
+/* Tabs */
+.tab-bar { background:#1a1a2e; padding:0 32px; display:flex; gap:4px; }
+.tab-btn { padding:11px 22px; font-size:13px; font-weight:600; color:rgba(255,255,255,.5); border:none; background:transparent; cursor:pointer; border-bottom:3px solid transparent; transition:all .2s; }
+.tab-btn:hover { color:rgba(255,255,255,.85); }
+.tab-btn.active { color:#fff; border-bottom-color:#4dabf7; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
 </style>
 </head>
 <body>
 
 <div class="page-header">
-  <h1>藍新金流 · 合作推廣商商店商業條件申請表</h1>
-  <p>藍新科技股份有限公司 · 藍新金流服務平台</p>
+  <h1>金流轉介申請平台</h1>
+  <p>Ocard · 合作金流服務申請</p>
 </div>
 
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('newebpay', this)">💳 藍新金流</button>
+  <button class="tab-btn" onclick="switchTab('linepay', this)">🟢 Line Pay</button>
+</div>
+
+<!-- ══ 藍新金流 Panel ══ -->
+<div id="panel-newebpay" class="tab-panel active">
 <div class="container">
 
   <!-- 申請人資料 -->
@@ -160,7 +175,7 @@ body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:
     </div>
     <div class="card-body">
       <div class="grid-2">
-        <div class="field"><label>申請人姓名</label><input type="text" id="applicantName" placeholder="例：陳小明"></div>
+        <div class="field"><label>申請人姓名</label><input type="text" id="applicantName" placeholder="例：Alan 陳小明"></div>
         <div class="field"><label>申請人電話</label><input type="text" id="applicantPhone" placeholder="例：0912-345-678"></div>
         <div class="field"><label>申請人電子郵件</label><input type="email" id="applicantEmail" placeholder="example@ocard.co"></div>
         <div class="field"><label>填寫日期</label><input type="date" id="fillDate"></div>
@@ -307,9 +322,100 @@ body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:
   </div>
 
 </div>
+</div><!-- end panel-newebpay -->
+
+<!-- ══ Line Pay Panel ══ -->
+<div id="panel-linepay" class="tab-panel">
+<div class="container">
+
+  <div class="card">
+    <div class="card-header">
+      <h2>申請人資料</h2>
+      <span class="badge badge-blue">由夥伴填寫</span>
+    </div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div class="field"><label>申請人姓名</label><input type="text" id="lp_applicant" placeholder="例：Alan 陳小明"></div>
+        <div class="field"><label>公司名稱</label><input type="text" id="lp_company" placeholder="請填入公司名稱"></div>
+        <div class="field"><label>品牌名稱</label><input type="text" id="lp_brand" placeholder="請填入品牌名稱"></div>
+        <div class="field"><label>統一編號</label><input type="text" id="lp_taxId" placeholder="請填入統編"></div>
+      </div>
+      <div class="grid-3" style="margin-top:14px;">
+        <div class="field">
+          <label>產業類型</label>
+          <select id="lp_industry">
+            <option value="">請選擇</option>
+            <option>咖啡館/餐廳</option>
+            <option>咖啡廳</option>
+            <option>餐廳</option>
+            <option>餐飲</option>
+            <option>零售</option>
+            <option>美容/美髮</option>
+            <option>健身/運動</option>
+            <option>旅宿</option>
+            <option>其他</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>申請交易模式</label>
+          <select id="lp_mode">
+            <option>OD(線上點餐)</option>
+            <option>EC(電商)</option>
+            <option>其他</option>
+          </select>
+        </div>
+        <div class="field"><label>進件日期</label><input type="date" id="lp_date"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>聯絡人資料</h2>
+    </div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div class="field"><label>聯絡人姓名</label><input type="text" id="lp_contact" placeholder="請填入姓名"></div>
+        <div class="field"><label>聯絡電話</label><input type="tel" id="lp_phone" placeholder="請填入電話"></div>
+        <div class="field"><label>電子信箱</label><input type="email" id="lp_email" placeholder="請填入信箱"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slack -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Slack 通知設定</h2>
+      <span class="badge badge-gray">選填</span>
+    </div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+      <div class="toggle-row">
+        <div class="toggle" id="lpSlackToggle" onclick="toggleLpSlack()"></div>
+        <span class="toggle-label">送出後自動發送 Slack 通知</span>
+      </div>
+      <div id="lpSlackConfig" style="display:none;">
+        <div class="grid-2">
+          <div class="field"><label>Slack Webhook URL</label><input type="url" id="lpSlackWebhook" placeholder="https://hooks.slack.com/services/..."></div>
+          <div class="field"><label>頻道備註</label><input type="text" id="lpSlackChannel" placeholder="#業務申請單"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Line Pay Action bar -->
+<div class="action-bar">
+  <button class="btn btn-secondary" onclick="resetLinePay()">🗑 清除</button>
+  <button class="btn btn-primary" id="lpBtn" onclick="submitLinePay()" style="background:#06c755;">
+    <span class="spinner" id="lpSpinner"></span>
+    📋 送出至 Google 試算表
+  </button>
+</div>
+</div><!-- end panel-linepay -->
 
 <!-- Action bar -->
-<div class="action-bar">
+<div class="action-bar" id="newebpayActionBar">
   <button class="btn btn-secondary" onclick="resetForm()">🗑 清除</button>
   <button class="btn btn-primary" id="genBtn" onclick="generatePDF()">
     <span class="spinner" id="spinner"></span>
@@ -648,6 +754,109 @@ async function sendSlack(data, filename) {
     ]
   };
 
+  try {
+    const resp = await fetch('http://localhost:8899/send-slack', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ webhook, body }),
+    });
+    if (resp.ok) showToast('✅ Slack 通知已發送！');
+    else throw new Error();
+  } catch {
+    showToast('⚠️ Slack 通知發送失敗', true);
+  }
+}
+
+let lpSlackEnabled = false;
+function toggleLpSlack() {
+  lpSlackEnabled = !lpSlackEnabled;
+  document.getElementById('lpSlackToggle').classList.toggle('on', lpSlackEnabled);
+  document.getElementById('lpSlackConfig').style.display = lpSlackEnabled ? 'block' : 'none';
+}
+
+// ── Tab 切換
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  btn.classList.add('active');
+  const bar = document.getElementById('newebpayActionBar');
+  if (bar) bar.style.display = tab === 'newebpay' ? 'flex' : 'none';
+}
+
+// ── Line Pay 清除
+function resetLinePay() {
+  if (!confirm('確定要清除所有已填內容嗎？')) return;
+  ['lp_applicant','lp_company','lp_brand','lp_tax','lp_contact','lp_phone','lp_email'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('lp_date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('lp_industry').value = '餐飲';
+  document.getElementById('lp_mode').value = '一般刷卡';
+  showToast('表單已清除');
+}
+
+// ── Line Pay 送出 → Google Sheets
+async function submitLinePay() {
+  const row = [
+    getVal('lp_date'),
+    getVal('lp_applicant'),
+    getVal('lp_company'),
+    getVal('lp_brand'),
+    getVal('lp_tax'),
+    getVal('lp_industry'),
+    getVal('lp_mode'),
+    getVal('lp_contact'),
+    getVal('lp_phone'),
+    getVal('lp_email'),
+  ];
+  if (!row[1] || !row[2] || !row[6]) {
+    showToast('請填寫公司名稱、品牌、聯絡人', true); return;
+  }
+  const btn = document.getElementById('lpSubmitBtn');
+  btn.disabled = true; btn.textContent = '送出中…';
+  try {
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPLACEHOLDER/exec';
+    const resp = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ row }),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    showToast('✅ Line Pay 申請已送出！');
+    if (lpSlackEnabled) await sendSlackLinePay(row);
+    resetLinePay();
+  } catch (err) {
+    showToast('❌ ' + err.message, true);
+  } finally {
+    btn.disabled = false; btn.textContent = '送出申請';
+  }
+}
+
+// ── Slack 通知 (Line Pay)
+async function sendSlackLinePay(row) {
+  const webhook = getVal('lpSlackWebhook');
+  const channel = getVal('lpSlackChannel');
+  if (!webhook) { showToast('請填寫 Slack Webhook URL', true); return; }
+  const [date, applicant, company, brand, taxId, industry, mode, contact, phone, email] = row;
+  const body = {
+    blocks: [
+      { type: 'header', text: { type: 'plain_text', text: '🟢 Line Pay 申請單', emoji: true } },
+      { type: 'section', fields: [
+        { type: 'mrkdwn', text: `*申請人：*\n${applicant}` },
+        { type: 'mrkdwn', text: `*進件日期：*\n${date}` },
+        { type: 'mrkdwn', text: `*公司名稱：*\n${company}` },
+        { type: 'mrkdwn', text: `*品牌：*\n${brand}` },
+        { type: 'mrkdwn', text: `*統編：*\n${taxId}` },
+        { type: 'mrkdwn', text: `*產業類型：*\n${industry}` },
+        { type: 'mrkdwn', text: `*申請交易模式：*\n${mode}` },
+        { type: 'mrkdwn', text: `*聯絡人：*\n${contact}` },
+        { type: 'mrkdwn', text: `*電話：*\n${phone}` },
+        { type: 'mrkdwn', text: `*信箱：*\n${email}` },
+      ]},
+      ...(channel ? [{ type: 'context', elements: [{ type: 'mrkdwn', text: channel }] }] : []),
+    ]
+  };
   try {
     const resp = await fetch('http://localhost:8899/send-slack', {
       method: 'POST',
