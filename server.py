@@ -10,6 +10,45 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import PIL.Image, urllib.request, json
 
+# ── Google Drive 上傳
+_DRIVE_FOLDER_ID = '1l3dUlU_QIi0xWAC1GlzHl9e5GukUivia'
+_drive_service = None
+def _get_drive():
+    global _drive_service
+    if _drive_service:
+        return _drive_service
+    try:
+        from google.oauth2 import service_account
+        from googleapiclient.discovery import build
+        # 優先用環境變數（Render 部署），fallback 用本地檔案
+        creds_json = os.environ.get('GDRIVE_CREDENTIALS_JSON')
+        if creds_json:
+            import json as _json
+            info = _json.loads(creds_json)
+            creds = service_account.Credentials.from_service_account_info(
+                info, scopes=['https://www.googleapis.com/auth/drive'])
+        else:
+            creds_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'gdrive_credentials.json')
+            creds = service_account.Credentials.from_service_account_file(
+                creds_path, scopes=['https://www.googleapis.com/auth/drive'])
+        _drive_service = build('drive', 'v3', credentials=creds)
+    except Exception:
+        pass
+    return _drive_service
+
+def upload_to_drive(pdf_bytes, filename):
+    svc = _get_drive()
+    if not svc:
+        return
+    try:
+        from googleapiclient.http import MediaIoBaseUpload
+        buf = io.BytesIO(pdf_bytes)
+        meta = {'name': filename, 'parents': [_DRIVE_FOLDER_ID]}
+        media = MediaIoBaseUpload(buf, mimetype='application/pdf')
+        svc.files().create(body=meta, media_body=media).execute()
+    except Exception:
+        pass
+
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 
@@ -518,11 +557,13 @@ def generate_pdf():
         sig_bytes   = base64.b64decode(payload['sigImage'].split(',')[-1])   if payload.get('sigImage')   else None
         stamp_bytes = base64.b64decode(payload['stampImage'].split(',')[-1]) if payload.get('stampImage') else None
         pdf_bytes = build_pdf(data, sig_bytes, stamp_bytes)
-        buf = io.BytesIO(pdf_bytes)
         member = data.get('memberName') or data.get('memberId') or '申請'
         date   = data.get('fillDate','').replace('-','')
+        filename = f'藍新申請表_{member}_{date}.pdf'
+        upload_to_drive(pdf_bytes, filename)
+        buf = io.BytesIO(pdf_bytes)
         return send_file(buf, as_attachment=True,
-                         download_name=f'藍新申請表_{member}_{date}.pdf',
+                         download_name=filename,
                          mimetype='application/pdf')
     except Exception as e:
         import traceback
