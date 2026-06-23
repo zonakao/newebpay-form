@@ -816,7 +816,7 @@ async function submitLinePay() {
   const btn = document.getElementById('lpSubmitBtn');
   btn.disabled = true; btn.textContent = '送出中…';
   try {
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPLACEHOLDER/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJ7elpsnX-AEAOwXF5dzq9dgvSWgEt4zkr-Z2-T8wM6vxKyNKXhrVbkIASEzHlLp7s/exec';
     const resp = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
