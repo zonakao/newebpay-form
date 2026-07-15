@@ -619,6 +619,11 @@ body { font-family: -apple-system,'Helvetica Neue',Arial,sans-serif; background:
 </template>
 
 <script>
+// ── API base URL（本機開發 or Render 部署自動切換）
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8899'
+  : '';
+
 // ── 初始化
 document.getElementById('fillDate').value = new Date().toISOString().split('T')[0];
 
@@ -699,7 +704,7 @@ async function generatePDF() {
   btn.disabled = true; spin.classList.add('show');
 
   try {
-    const resp = await fetch('http://localhost:8899/generate-pdf', {
+    const resp = await fetch(`${API_BASE}/generate-pdf`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data, sigImage: sigDataUrl }),
@@ -755,7 +760,7 @@ async function sendSlack(data, filename) {
   };
 
   try {
-    const resp = await fetch('http://localhost:8899/send-slack', {
+    const resp = await fetch(`${API_BASE}/send-slack`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ webhook, body }),
@@ -858,7 +863,7 @@ async function sendSlackLinePay(row) {
     ]
   };
   try {
-    const resp = await fetch('http://localhost:8899/send-slack', {
+    const resp = await fetch(`${API_BASE}/send-slack`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ webhook, body }),
